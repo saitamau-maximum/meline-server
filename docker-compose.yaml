@@ -1,0 +1,54 @@
+services:
+  database:
+    image: mysql:8.1
+    ports:
+      - 3306:3306
+    volumes:
+      - ./etc/mysql/conf.d:/etc/mysql/conf.d
+      - ./etc/mysql/dbdata:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  server:
+    image: golang:1.23
+    build:
+      context: .
+      target: dev
+    volumes:
+      - ./server:/app
+    ports:
+      - 8000:8000
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+      - ENV=${ENV}
+      - FRONT_OAUTH_SUCCESS_URL=${FRONT_OAUTH_SUCCESS_URL}
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  dbdata:
