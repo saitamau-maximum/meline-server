@@ -33,7 +33,7 @@ services:
       context: .
       target: dev
     volumes:
-      - ./server:/app
+      - .:/app
     ports:
       - 8000:8000
     environment:
