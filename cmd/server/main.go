@@ -32,6 +32,7 @@ func main() {
 
 	hub := entity.NewHubEntity()
 	go hub.RunLoop()
+	go handler.InitOTTExpireChecker()
 
 	e := echo.New()
 

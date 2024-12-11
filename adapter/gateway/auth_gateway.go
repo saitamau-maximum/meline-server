@@ -24,13 +24,13 @@ func NewAuthGateway(userInteractor usecase.IUserInteractor) *AuthGateway {
 
 func (h *AuthGateway) Auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		// Get Access Token
-		cookie, err := c.Cookie(config.ACCESS_TOKEN_COOKIE_NAME)
-		if err != nil {
+		authHeader := c.Request().Header.Get("Authorization")
+		if authHeader == "" {
 			return c.JSON(http.StatusUnauthorized, response.ErrorResponse{Message: "Unauthorized"})
 		}
 
-		token, err := jwt.Parse(cookie.Value, func(token *jwt.Token) (interface{}, error) {
+		accessToken := authHeader[len("Bearer "):]
+		token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
 			if token.Method.Alg() != "HS256" {
 				return nil, fmt.Errorf("unsupported signing method")
 			}
