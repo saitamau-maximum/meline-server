@@ -5,6 +5,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/mysqldialect"
 
@@ -31,8 +32,17 @@ func main() {
 
 	hub := entity.NewHubEntity()
 	go hub.RunLoop()
+	go handler.InitOTTExpireChecker()
 
 	e := echo.New()
+
+	if config.ENV == "development" {
+		e.Use(middleware.CORS())
+	} else {
+		e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: []string{config.CLIENT_ORIGIN},
+		}))
+	}
 
 	db, err := mysql.ConnectDB(HOST)
 	if err != nil {
