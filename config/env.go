@@ -17,6 +17,7 @@ const (
 	_FRONT_OAUTH_SUCCESS_URL = "FRONT_OAUTH_SUCCESS_URL"
 	_CLIENT_ORIGIN           = "CLIENT_ORIGIN"
 	_JWT_SECRET              = "JWT_SECRET"
+	_OAUTH_OTT_EXPIRE        = "OAUTH_OTT_EXPIRE"
 )
 
 var (
@@ -30,6 +31,7 @@ var (
 	FRONT_OAUTH_SUCCESS_URL = os.Getenv(_FRONT_OAUTH_SUCCESS_URL)
 	CLIENT_ORIGIN           = os.Getenv(_CLIENT_ORIGIN)
 	JWT_SECRET              = os.Getenv(_JWT_SECRET)
+	OAUTH_OTT_EXPIRE        = os.Getenv(_OAUTH_OTT_EXPIRE)
 
 	IsDev = ENV == "development"
 
@@ -49,6 +51,7 @@ var (
 		_ENV,
 		_FRONT_OAUTH_SUCCESS_URL,
 		_JWT_SECRET,
+		_OAUTH_OTT_EXPIRE,
 	}
 )
 

@@ -12,10 +12,10 @@ import (
 )
 
 type IAuthInteractor interface {
-	CreateAccessToken(ctx context.Context, userId uint64) (string, error)
+	GenerateJWTWithUserID(ctx context.Context, userId uint64) (string, error)
 	GenerateState(stateLength int) string
 	GenerateStateCookie(state string, isDev bool) *http.Cookie
-	GenerateAccessTokenCookie(token string, isDev bool) *http.Cookie
+	GenerateOTT(ctx context.Context) string
 }
 
 type AuthInteractor struct {
@@ -25,7 +25,7 @@ func NewAuthInteractor() IAuthInteractor {
 	return &AuthInteractor{}
 }
 
-func (i *AuthInteractor) CreateAccessToken(ctx context.Context, userId uint64) (string, error) {
+func (i *AuthInteractor) GenerateJWTWithUserID(ctx context.Context, userId uint64) (string, error) {
 	claims := jwt.MapClaims{
 		"iss":     config.APP_IDENTIFIER,
 		"user_id": userId,
@@ -38,12 +38,16 @@ func (i *AuthInteractor) CreateAccessToken(ctx context.Context, userId uint64) (
 	return token.SignedString([]byte(config.JWT_SECRET))
 }
 
-func (i *AuthInteractor) GenerateState(stateLength int) string {
-	k := make([]byte, stateLength)
+func generateRandomString(length int) string {
+	k := make([]byte, length)
 	if _, err := crand.Read(k); err != nil {
 		panic(err)
 	}
 	return fmt.Sprintf("%x", k)
+}
+
+func (i *AuthInteractor) GenerateState(stateLength int) string {
+	return generateRandomString(stateLength)
 }
 
 func (i *AuthInteractor) GenerateStateCookie(state string, isDev bool) *http.Cookie {
@@ -59,15 +63,6 @@ func (i *AuthInteractor) GenerateStateCookie(state string, isDev bool) *http.Coo
 	return cookie
 }
 
-func (i *AuthInteractor) GenerateAccessTokenCookie(token string, isDev bool) *http.Cookie {
-	cookie := new(http.Cookie)
-	cookie.Name = config.ACCESS_TOKEN_COOKIE_NAME
-	cookie.Value = token
-	cookie.Path = "/"
-	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteLaxMode
-	cookie.Secure = !isDev
-	cookie.Expires = time.Now().Add(config.ACCESS_TOKEN_EXPIRE)
-
-	return cookie
+func (i *AuthInteractor) GenerateOTT(ctx context.Context) string {
+	return generateRandomString(32)
 }

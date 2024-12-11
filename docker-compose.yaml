@@ -47,6 +47,7 @@ services:
       - ENV=${ENV}
       - CLIENT_ORIGIN=${CLIENT_ORIGIN}
       - FRONT_OAUTH_SUCCESS_URL=${FRONT_OAUTH_SUCCESS_URL}
+      - OAUTH_OTT_EXPIRE=${OAUTH_OTT_EXPIRE}
     depends_on:
       database:
         condition: service_healthy
