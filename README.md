@@ -7,7 +7,7 @@
 ### Setup
 
 ```bash
-docker-compose up -d --build
+./scripts/setup.sh
 ```
 
 DBのマイグレーションを行う必要があります。[migration 手順](docs/migrate.md)を参照してください。
