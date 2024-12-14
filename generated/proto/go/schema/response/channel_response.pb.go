@@ -111,222 +111,6 @@ func (x *GetChannelByIDResponse) GetChannel() *base.ChannelDetail {
 	return nil
 }
 
-type JoinChannelResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *JoinChannelResponse) Reset() {
-	*x = JoinChannelResponse{}
-	mi := &file_schema_response_channel_response_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *JoinChannelResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*JoinChannelResponse) ProtoMessage() {}
-
-func (x *JoinChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_response_channel_response_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use JoinChannelResponse.ProtoReflect.Descriptor instead.
-func (*JoinChannelResponse) Descriptor() ([]byte, []int) {
-	return file_schema_response_channel_response_proto_rawDescGZIP(), []int{2}
-}
-
-type CreateChannelResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *CreateChannelResponse) Reset() {
-	*x = CreateChannelResponse{}
-	mi := &file_schema_response_channel_response_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateChannelResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateChannelResponse) ProtoMessage() {}
-
-func (x *CreateChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_response_channel_response_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateChannelResponse.ProtoReflect.Descriptor instead.
-func (*CreateChannelResponse) Descriptor() ([]byte, []int) {
-	return file_schema_response_channel_response_proto_rawDescGZIP(), []int{3}
-}
-
-type CreateChildChannelResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *CreateChildChannelResponse) Reset() {
-	*x = CreateChildChannelResponse{}
-	mi := &file_schema_response_channel_response_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateChildChannelResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateChildChannelResponse) ProtoMessage() {}
-
-func (x *CreateChildChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_response_channel_response_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateChildChannelResponse.ProtoReflect.Descriptor instead.
-func (*CreateChildChannelResponse) Descriptor() ([]byte, []int) {
-	return file_schema_response_channel_response_proto_rawDescGZIP(), []int{4}
-}
-
-type UpdateChannelResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *UpdateChannelResponse) Reset() {
-	*x = UpdateChannelResponse{}
-	mi := &file_schema_response_channel_response_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateChannelResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateChannelResponse) ProtoMessage() {}
-
-func (x *UpdateChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_response_channel_response_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateChannelResponse.ProtoReflect.Descriptor instead.
-func (*UpdateChannelResponse) Descriptor() ([]byte, []int) {
-	return file_schema_response_channel_response_proto_rawDescGZIP(), []int{5}
-}
-
-type DeleteChannelResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *DeleteChannelResponse) Reset() {
-	*x = DeleteChannelResponse{}
-	mi := &file_schema_response_channel_response_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteChannelResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteChannelResponse) ProtoMessage() {}
-
-func (x *DeleteChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_response_channel_response_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteChannelResponse.ProtoReflect.Descriptor instead.
-func (*DeleteChannelResponse) Descriptor() ([]byte, []int) {
-	return file_schema_response_channel_response_proto_rawDescGZIP(), []int{6}
-}
-
-type LeaveChannelResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *LeaveChannelResponse) Reset() {
-	*x = LeaveChannelResponse{}
-	mi := &file_schema_response_channel_response_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LeaveChannelResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LeaveChannelResponse) ProtoMessage() {}
-
-func (x *LeaveChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_schema_response_channel_response_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LeaveChannelResponse.ProtoReflect.Descriptor instead.
-func (*LeaveChannelResponse) Descriptor() ([]byte, []int) {
-	return file_schema_response_channel_response_proto_rawDescGZIP(), []int{7}
-}
-
 var File_schema_response_channel_response_proto protoreflect.FileDescriptor
 
 var file_schema_response_channel_response_proto_rawDesc = []byte{
@@ -344,30 +128,20 @@ var file_schema_response_channel_response_proto_rawDesc = []byte{
 	0x65, 0x12, 0x2d, 0x0a, 0x07, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x13, 0x2e, 0x62, 0x61, 0x73, 0x65, 0x2e, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65,
 	0x6c, 0x44, 0x65, 0x74, 0x61, 0x69, 0x6c, 0x52, 0x07, 0x63, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c,
-	0x22, 0x15, 0x0a, 0x13, 0x4a, 0x6f, 0x69, 0x6e, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x17, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74,
-	0x65, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x1c, 0x0a, 0x1a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x43, 0x68, 0x69, 0x6c, 0x64, 0x43,
-	0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x17,
-	0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x17, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x16, 0x0a, 0x14, 0x4c, 0x65, 0x61, 0x76, 0x65, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0xcf, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d,
-	0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x42, 0x14, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65, 0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x45, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
-	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x61, 0x69, 0x74, 0x61, 0x6d, 0x61, 0x75, 0x2d, 0x6d, 0x61,
-	0x78, 0x69, 0x6d, 0x75, 0x6d, 0x2f, 0x6d, 0x65, 0x6c, 0x69, 0x6e, 0x65, 0x2f, 0x67, 0x65, 0x6e,
-	0x65, 0x72, 0x61, 0x74, 0x65, 0x64, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f,
-	0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2f, 0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0xa2,
-	0x02, 0x03, 0x53, 0x52, 0x58, 0xaa, 0x02, 0x0f, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0xca, 0x02, 0x0f, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61,
-	0x5c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0xe2, 0x02, 0x1b, 0x53, 0x63, 0x68, 0x65,
-	0x6d, 0x61, 0x5c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x5c, 0x47, 0x50, 0x42, 0x4d,
-	0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea, 0x02, 0x10, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61,
-	0x3a, 0x3a, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x42, 0xcf, 0x01, 0x0a, 0x13, 0x63, 0x6f, 0x6d, 0x2e, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e,
+	0x72, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x14, 0x43, 0x68, 0x61, 0x6e, 0x6e, 0x65,
+	0x6c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x50, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01,
+	0x5a, 0x45, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x61, 0x69,
+	0x74, 0x61, 0x6d, 0x61, 0x75, 0x2d, 0x6d, 0x61, 0x78, 0x69, 0x6d, 0x75, 0x6d, 0x2f, 0x6d, 0x65,
+	0x6c, 0x69, 0x6e, 0x65, 0x2f, 0x67, 0x65, 0x6e, 0x65, 0x72, 0x61, 0x74, 0x65, 0x64, 0x2f, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x6f, 0x2f, 0x73, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2f, 0x72,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0xa2, 0x02, 0x03, 0x53, 0x52, 0x58, 0xaa, 0x02, 0x0f,
+	0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x2e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0xca,
+	0x02, 0x0f, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x5c, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0xe2, 0x02, 0x1b, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x5c, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x5c, 0x47, 0x50, 0x42, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0xea,
+	0x02, 0x10, 0x53, 0x63, 0x68, 0x65, 0x6d, 0x61, 0x3a, 0x3a, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -382,22 +156,16 @@ func file_schema_response_channel_response_proto_rawDescGZIP() []byte {
 	return file_schema_response_channel_response_proto_rawDescData
 }
 
-var file_schema_response_channel_response_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_schema_response_channel_response_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_schema_response_channel_response_proto_goTypes = []any{
-	(*GetAllChannelsResponse)(nil),     // 0: schema.response.GetAllChannelsResponse
-	(*GetChannelByIDResponse)(nil),     // 1: schema.response.GetChannelByIDResponse
-	(*JoinChannelResponse)(nil),        // 2: schema.response.JoinChannelResponse
-	(*CreateChannelResponse)(nil),      // 3: schema.response.CreateChannelResponse
-	(*CreateChildChannelResponse)(nil), // 4: schema.response.CreateChildChannelResponse
-	(*UpdateChannelResponse)(nil),      // 5: schema.response.UpdateChannelResponse
-	(*DeleteChannelResponse)(nil),      // 6: schema.response.DeleteChannelResponse
-	(*LeaveChannelResponse)(nil),       // 7: schema.response.LeaveChannelResponse
-	(*base.Channel)(nil),               // 8: base.Channel
-	(*base.ChannelDetail)(nil),         // 9: base.ChannelDetail
+	(*GetAllChannelsResponse)(nil), // 0: schema.response.GetAllChannelsResponse
+	(*GetChannelByIDResponse)(nil), // 1: schema.response.GetChannelByIDResponse
+	(*base.Channel)(nil),           // 2: base.Channel
+	(*base.ChannelDetail)(nil),     // 3: base.ChannelDetail
 }
 var file_schema_response_channel_response_proto_depIdxs = []int32{
-	8, // 0: schema.response.GetAllChannelsResponse.channels:type_name -> base.Channel
-	9, // 1: schema.response.GetChannelByIDResponse.channel:type_name -> base.ChannelDetail
+	2, // 0: schema.response.GetAllChannelsResponse.channels:type_name -> base.Channel
+	3, // 1: schema.response.GetChannelByIDResponse.channel:type_name -> base.ChannelDetail
 	2, // [2:2] is the sub-list for method output_type
 	2, // [2:2] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -416,7 +184,7 @@ func file_schema_response_channel_response_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_schema_response_channel_response_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
