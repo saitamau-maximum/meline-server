@@ -6,13 +6,14 @@ import (
 
 	"github.com/saitamau-maximum/meline/domain/entity"
 	"github.com/saitamau-maximum/meline/domain/repository"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
 type IChannelInteractor interface {
-	GetAllChannels(ctx context.Context, userId uint64) (*presenter.GetAllChannelsResponse, error)
-	GetChannelByID(ctx context.Context, id uint64) (*presenter.GetChannelByIdResponse, error)
+	GetAllChannels(ctx context.Context, userId uint64) (*response.GetAllChannelsResponse, error)
+	GetChannelByID(ctx context.Context, id uint64) (*response.GetChannelByIDResponse, error)
 	CreateChannel(ctx context.Context, name string, userId uint64) error
 	CreateChildChannel(ctx context.Context, name string, parentChannelId, userId uint64) error
 	UpdateChannel(ctx context.Context, id uint64, name string) error
@@ -37,7 +38,7 @@ func NewChannelInteractor(hub *entity.Hub, channelRepository repository.IChannel
 	}
 }
 
-func (i *ChannelInteractor) GetAllChannels(ctx context.Context, userId uint64) (*presenter.GetAllChannelsResponse, error) {
+func (i *ChannelInteractor) GetAllChannels(ctx context.Context, userId uint64) (*response.GetAllChannelsResponse, error) {
 	channels, err := i.userRepository.FindChannelsByUserID(ctx, userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -55,10 +56,10 @@ func (i *ChannelInteractor) GetAllChannels(ctx context.Context, userId uint64) (
 	return i.channelPresenter.GenerateGetAllChannelsResponse(entitiedChannels), nil
 }
 
-func (i *ChannelInteractor) GetChannelByID(ctx context.Context, id uint64) (*presenter.GetChannelByIdResponse, error) {
+func (i *ChannelInteractor) GetChannelByID(ctx context.Context, id uint64) (*response.GetChannelByIDResponse, error) {
 	channel, err := i.channelRepository.FindByID(ctx, id)
 	if err != nil {
-		return &presenter.GetChannelByIdResponse{}, err
+		return &response.GetChannelByIDResponse{}, err
 	}
 
 	return i.channelPresenter.GenerateGetChannelByIdResponse(channel.ToChannelEntity()), nil

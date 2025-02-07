@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 )
 
 type Channel struct {
@@ -37,7 +38,6 @@ type UpdateChannelResponse struct {
 }
 
 type IChannelPresenter interface {
-	GenerateGetAllChannelsResponse(channels []*entity.Channel) *GetAllChannelsResponse
-	GenerateGetChannelByIdResponse(channel *entity.Channel) *GetChannelByIdResponse
-	GenerateGetChannelsByNameResponse(channels []*entity.Channel) *GetChannelsByNameResponse
+	GenerateGetAllChannelsResponse(channels []*entity.Channel) *response.GetAllChannelsResponse
+	GenerateGetChannelByIdResponse(channel *entity.Channel) *response.GetChannelByIDResponse
 }

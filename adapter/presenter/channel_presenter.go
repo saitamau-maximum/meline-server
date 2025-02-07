@@ -4,6 +4,8 @@ import (
 	"strconv"
 
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/base"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
@@ -13,13 +15,13 @@ func NewChannelPresenter() presenter.IChannelPresenter {
 	return &ChannelPresenter{}
 }
 
-func (p *ChannelPresenter) GenerateGetAllChannelsResponse(channels []*entity.Channel) *presenter.GetAllChannelsResponse {
-	channelsResponse := &presenter.GetAllChannelsResponse{
-		Channels: []*presenter.Channel{},
+func (p *ChannelPresenter) GenerateGetAllChannelsResponse(channels []*entity.Channel) *response.GetAllChannelsResponse {
+	channelsResponse := &response.GetAllChannelsResponse{
+		Channels: []*base.Channel{},
 	}
 	for _, channel := range channels {
-		channelsResponse.Channels = append(channelsResponse.Channels, &presenter.Channel{
-			ID:   strconv.FormatUint(channel.ID, 10),
+		channelsResponse.Channels = append(channelsResponse.Channels, &base.Channel{
+			Id:   strconv.FormatUint(channel.ID, 10),
 			Name: channel.Name,
 		})
 	}
@@ -27,44 +29,30 @@ func (p *ChannelPresenter) GenerateGetAllChannelsResponse(channels []*entity.Cha
 	return channelsResponse
 }
 
-func (p *ChannelPresenter) GenerateGetChannelByIdResponse(channel *entity.Channel) *presenter.GetChannelByIdResponse {
-	childChannels := make([]*presenter.Channel, 0)
+func (p *ChannelPresenter) GenerateGetChannelByIdResponse(channel *entity.Channel) *response.GetChannelByIDResponse {
+	childChannels := make([]*base.Channel, 0)
 	for _, childChannel := range channel.ChildChannels {
-		childChannels = append(childChannels, &presenter.Channel{
-			ID:   strconv.FormatUint(childChannel.ID, 10),
+		childChannels = append(childChannels, &base.Channel{
+			Id:   strconv.FormatUint(childChannel.ID, 10),
 			Name: childChannel.Name,
 		})
 	}
 
-	users := make([]*presenter.User, 0)
+	users := make([]*base.User, 0)
 	for _, user := range channel.Users {
-		users = append(users, &presenter.User{
-			ID:       strconv.FormatUint(user.ID, 10),
+		users = append(users, &base.User{
+			Id:       strconv.FormatUint(user.ID, 10),
 			Name:     user.Name,
-			ImageURL: user.ImageURL,
+			ImageUrl: user.ImageURL,
 		})
 	}
 
-	return &presenter.GetChannelByIdResponse{
-		Channel: &presenter.ChannelDetail{
-			ID:       strconv.FormatUint(channel.ID, 10),
+	return &response.GetChannelByIDResponse{
+		Channel: &base.ChannelDetail{
+			Id:       strconv.FormatUint(channel.ID, 10),
 			Name:     channel.Name,
 			Users:    users,
 			Channels: childChannels,
 		},
 	}
-}
-
-func (p *ChannelPresenter) GenerateGetChannelsByNameResponse(channels []*entity.Channel) *presenter.GetChannelsByNameResponse {
-	channelsResponse := &presenter.GetChannelsByNameResponse{
-		Channels: []*presenter.Channel{},
-	}
-	for _, channel := range channels {
-		channelsResponse.Channels = append(channelsResponse.Channels, &presenter.Channel{
-			ID:   strconv.FormatUint(channel.ID, 10),
-			Name: channel.Name,
-		})
-	}
-
-	return channelsResponse
 }

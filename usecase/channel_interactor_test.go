@@ -7,9 +7,10 @@ import (
 	"testing"
 
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/base"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase"
-	"github.com/saitamau-maximum/meline/usecase/presenter"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -39,9 +40,9 @@ func TestChannelInteractor_Success_GetAllChannels(t *testing.T) {
 
 	interactor := usecase.NewChannelInteractor(hub, repo, repoUser, pre)
 
-	expectedChannels := []*presenter.Channel{
+	expectedChannels := []*base.Channel{
 		{
-			ID:   "1",
+			Id:   "1",
 			Name: "test-channel",
 		},
 	}
@@ -61,8 +62,8 @@ func TestChannelInteractor_Failed_GetAllChannels(t *testing.T) {
 	interactor := usecase.NewChannelInteractor(hub, repo, repoUser, pre)
 	ctx = context.WithValue(ctx, FindChannelsFailedValue, true)
 
-	expectedChannels := &presenter.GetAllChannelsResponse{
-		Channels: []*presenter.Channel{},
+	expectedChannels := &response.GetAllChannelsResponse{
+		Channels: []*base.Channel{},
 	}
 
 	result, err := interactor.GetAllChannels(ctx, 1)
@@ -79,13 +80,14 @@ func TestChannelInteractor_Success_GetChannelByID(t *testing.T) {
 
 	interactor := usecase.NewChannelInteractor(hub, repo, repoUser, pre)
 
-	expectedChannel := &presenter.ChannelDetail{
+	expectedChannel := &base.ChannelDetail{
+		Id:  "1",
 		Name: "test-channel",
-		Users: []*presenter.User{
+		Users: []*base.User{
 			{
-				ID:       "1",
+				Id:       "1",
 				Name:     "John Doe",
-				ImageURL: "https://example.com/image.jpg",
+				ImageUrl: "https://example.com/image.jpg",
 			},
 		},
 	}
@@ -107,7 +109,7 @@ func TestChannelInteractor_Failed_GetChannelByID(t *testing.T) {
 
 	result, err := interactor.GetChannelByID(ctx, 2)
 
-	expectedChannel := &presenter.GetChannelByIdResponse{}
+	expectedChannel := &response.GetChannelByIDResponse{}
 
 	assert.Error(t, err)
 	assert.Equal(t, expectedChannel, result)
@@ -381,48 +383,35 @@ func (m *mockChannelRepository) FetchJoinedChannelIDs(ctx context.Context, userI
 
 type mockChannelPresenter struct{}
 
-func (m *mockChannelPresenter) GenerateGetChannelByIdResponse(channel *entity.Channel) *presenter.GetChannelByIdResponse {
-	users := make([]*presenter.User, len(channel.Users))
+func (m *mockChannelPresenter) GenerateGetChannelByIdResponse(channel *entity.Channel) *response.GetChannelByIDResponse {
+	users := make([]*base.User, len(channel.Users))
 	for i, u := range channel.Users {
-		users[i] = &presenter.User{
-			ID:       strconv.FormatUint(u.ID, 10),
+		users[i] = &base.User{
+			Id:       strconv.FormatUint(u.ID, 10),
 			Name:     u.Name,
-			ImageURL: u.ImageURL,
+			ImageUrl: u.ImageURL,
 		}
 	}
 
-	return &presenter.GetChannelByIdResponse{
-		Channel: &presenter.ChannelDetail{
-			Name:  channel.Name,
-			Users: users,
+	return &response.GetChannelByIDResponse{
+		Channel: &base.ChannelDetail{
+			Id:       strconv.FormatUint(channel.ID, 10),
+			Name:     channel.Name,
+			Users:    users,
 		},
 	}
 }
 
-func (m *mockChannelPresenter) GenerateGetAllChannelsResponse(channels []*entity.Channel) *presenter.GetAllChannelsResponse {
-	res := make([]*presenter.Channel, len(channels))
+func (m *mockChannelPresenter) GenerateGetAllChannelsResponse(channels []*entity.Channel) *response.GetAllChannelsResponse {
+	res := make([]*base.Channel, len(channels))
 	for i, c := range channels {
-		res[i] = &presenter.Channel{
-			ID:   strconv.FormatUint(c.ID, 10),
+		res[i] = &base.Channel{
+			Id:   strconv.FormatUint(c.ID, 10),
 			Name: c.Name,
 		}
 	}
 
-	return &presenter.GetAllChannelsResponse{
-		Channels: res,
-	}
-}
-
-func (m *mockChannelPresenter) GenerateGetChannelsByNameResponse(channels []*entity.Channel) *presenter.GetChannelsByNameResponse {
-	res := make([]*presenter.Channel, len(channels))
-	for i, c := range channels {
-		res[i] = &presenter.Channel{
-			ID:   strconv.FormatUint(c.ID, 10),
-			Name: c.Name,
-		}
-	}
-
-	return &presenter.GetChannelsByNameResponse{
+	return &response.GetAllChannelsResponse{
 		Channels: res,
 	}
 }

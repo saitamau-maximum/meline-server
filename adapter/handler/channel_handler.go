@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/labstack/echo/v4"
-	"github.com/saitamau-maximum/meline/adapter/request"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/request"
 	"github.com/saitamau-maximum/meline/usecase"
 )
 
