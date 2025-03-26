@@ -15,8 +15,8 @@ import (
 
 	"github.com/saitamau-maximum/meline/adapter/gateway"
 	"github.com/saitamau-maximum/meline/adapter/response"
+	schemaResponse "github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/config"
-	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
 type FailAuthUserNotFound string
@@ -253,15 +253,11 @@ func TestAuthGateway_Auth_Unauthorized_UserNotFound(t *testing.T) {
 
 type mockUserInteractor struct{}
 
-func (m *mockUserInteractor) GetUserByID(ctx context.Context, id uint64) (*presenter.GetUserByIdResponse, error) {
+func (m *mockUserInteractor) GetUserByID(ctx context.Context, id uint64) (*schemaResponse.UserMeResponse, error) {
 	return nil, nil
 }
 
-func (m *mockUserInteractor) GetUserByGithubIDOrCreate(ctx context.Context, githubID, userName, imageUrl string) (*presenter.GetUserByGithubIdResponse, error) {
-	return nil, nil
-}
-
-func (m *mockUserInteractor) CreateUser(ctx context.Context, githubID, name, imageURL string) (*presenter.CreateUserResponse, error) {
+func (m *mockUserInteractor) GetUserByGithubIDOrCreate(ctx context.Context, githubID, userName, imageUrl string) (*schemaResponse.UserMeResponse, error) {
 	return nil, nil
 }
 

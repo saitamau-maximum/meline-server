@@ -2,6 +2,7 @@ package presenter
 
 import (
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 )
 
 type User struct {
@@ -22,12 +23,7 @@ type GetUserByGithubIdResponse struct {
 	ImageURL string `json:"image_url"`
 }
 
-type CreateUserResponse struct {
-	ID string `json:"id"`
-}
-
 type IUserPresenter interface {
-	GenerateGetUserByIdResponse(user *entity.User) *GetUserByIdResponse
-	GenerateGetUserByGithubIdResponse(user *entity.User) *GetUserByGithubIdResponse
-	GenerateCreateUserResponse(user *entity.User) *CreateUserResponse
+	GenerateGetUserByIdResponse(user *entity.User) *response.UserMeResponse
+	GenerateGetUserByGithubIdResponse(user *entity.User) *response.UserMeResponse
 }

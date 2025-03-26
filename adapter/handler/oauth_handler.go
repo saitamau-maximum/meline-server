@@ -105,7 +105,7 @@ func (h *OAuthHandler) CallBack(c echo.Context) error {
 		return err
 	}
 
-	userId, err = strconv.ParseUint(getUserRes.ID, 10, 64)
+	userId, err = strconv.ParseUint(string(getUserRes.Id), 10, 64)
 	if err != nil {
 		log.Default().Println(err)
 		return c.JSON(http.StatusInternalServerError, err)

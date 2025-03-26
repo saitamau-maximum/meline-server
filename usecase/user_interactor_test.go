@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase"
-	"github.com/saitamau-maximum/meline/usecase/presenter"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -27,10 +27,10 @@ func TestUserInteractor_Success_GetUserByID(t *testing.T) {
 
 	interactor := usecase.NewUserInteractor(repo, pre)
 
-	expectedUser := &presenter.GetUserByIdResponse{
-		ID:       "1",
+	expectedUser := &response.UserMeResponse{
+		Id:       "1",
 		Name:     "John Doe",
-		ImageURL: "https://example.com/image.jpg",
+		ImageUrl: "https://example.com/image.jpg",
 	}
 
 	result, err := interactor.GetUserByID(ctx, 1)
@@ -58,10 +58,10 @@ func TestUserInteractor_Success_GetUserByGithubID(t *testing.T) {
 
 	interactor := usecase.NewUserInteractor(repo, pre)
 
-	expectedUser := &presenter.GetUserByGithubIdResponse{
-		ID:       "1",
+	expectedUser := &response.UserMeResponse{
+		Id:       "1",
 		Name:     "John Doe",
-		ImageURL: "https://example.com/image.jpg",
+		ImageUrl: "https://example.com/image.jpg",
 	}
 
 	result, err := interactor.GetUserByGithubIDOrCreate(ctx, "test-provider-id", "John Doe", "https://example.com/image.jpg")
@@ -80,52 +80,10 @@ func TestUserInteractor_Failed_GetUserByGithubID_NotFound(t *testing.T) {
 
 	result, err := interactor.GetUserByGithubIDOrCreate(ctx, "test-provider-id", "John Doe", "https://example.com/image.jpg")
 
-	expectedUser := &presenter.GetUserByGithubIdResponse{}
+	expectedUser := &response.UserMeResponse{}
 
 	assert.Error(t, err)
 	assert.Equal(t, expectedUser, result)
-}
-
-func TestUserInteractor_Success_CreateUser(t *testing.T) {
-	ctx := context.Background()
-	repo := &mockUserRepository{}
-	pre := &mockUserPresenter{}
-
-	interactor := usecase.NewUserInteractor(repo, pre)
-
-	expectedUser := &presenter.CreateUserResponse{
-		ID: "1",
-	}
-
-	user, err := interactor.CreateUser(ctx, "test-provider-id", "John Doe", "https://example.com/image.jpg")
-	assert.NoError(t, err)
-	assert.Equal(t, expectedUser, user)
-}
-
-func TestUserInteractor_Failed_CreateUser_CreateFailed(t *testing.T) {
-	ctx := context.Background()
-	repo := &mockUserRepository{}
-	pre := &mockUserPresenter{}
-
-	interactor := usecase.NewUserInteractor(repo, pre)
-	ctx = context.WithValue(ctx, CreateFailedValue, true)
-
-	user, err := interactor.CreateUser(ctx, "test-provider-id", "John Doe", "https://example.com/image.jpg")
-	assert.Error(t, err)
-	assert.Nil(t, user)
-}
-
-func TestUserInteractor_Failed_CreateUser_FindFailed(t *testing.T) {
-	ctx := context.Background()
-	repo := &mockUserRepository{}
-	pre := &mockUserPresenter{}
-
-	interactor := usecase.NewUserInteractor(repo, pre)
-	ctx = context.WithValue(ctx, FindByProviderIDFailedValue, true)
-
-	user, err := interactor.CreateUser(ctx, "test-provider-id", "John Doe", "https://example.com/image.jpg")
-	assert.Error(t, err)
-	assert.Nil(t, user)
 }
 
 func TestUserInteractor_Success_IsUserExists(t *testing.T) {
@@ -241,24 +199,18 @@ func (r *mockUserRepository) FindByChannelID(ctx context.Context, channelID uint
 
 type mockUserPresenter struct{}
 
-func (p *mockUserPresenter) GenerateGetUserByIdResponse(user *entity.User) *presenter.GetUserByIdResponse {
-	return &presenter.GetUserByIdResponse{
-		ID:       strconv.FormatUint(user.ID, 10),
+func (p *mockUserPresenter) GenerateGetUserByIdResponse(user *entity.User) *response.UserMeResponse {
+	return &response.UserMeResponse{
+		Id:       strconv.FormatUint(user.ID, 10),
 		Name:     user.Name,
-		ImageURL: user.ImageURL,
+		ImageUrl: user.ImageURL,
 	}
 }
 
-func (p *mockUserPresenter) GenerateGetUserByGithubIdResponse(user *entity.User) *presenter.GetUserByGithubIdResponse {
-	return &presenter.GetUserByGithubIdResponse{
-		ID:       strconv.FormatUint(user.ID, 10),
+func (p *mockUserPresenter) GenerateGetUserByGithubIdResponse(user *entity.User) *response.UserMeResponse {
+	return &response.UserMeResponse{
+		Id:       strconv.FormatUint(user.ID, 10),
 		Name:     user.Name,
-		ImageURL: user.ImageURL,
-	}
-}
-
-func (p *mockUserPresenter) GenerateCreateUserResponse(user *entity.User) *presenter.CreateUserResponse {
-	return &presenter.CreateUserResponse{
-		ID: strconv.FormatUint(user.ID, 10),
+		ImageUrl: user.ImageURL,
 	}
 }

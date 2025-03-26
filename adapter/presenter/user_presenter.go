@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
@@ -13,24 +14,18 @@ func NewUserPresenter() presenter.IUserPresenter {
 	return &UserPresenter{}
 }
 
-func (p *UserPresenter) GenerateGetUserByIdResponse(user *entity.User) *presenter.GetUserByIdResponse {
-	return &presenter.GetUserByIdResponse{
-		ID:       strconv.FormatUint(user.ID, 10),
+func (p *UserPresenter) GenerateGetUserByIdResponse(user *entity.User) *response.UserMeResponse {
+	return &response.UserMeResponse{
+		Id:       strconv.FormatUint(user.ID, 10),
 		Name:     user.Name,
-		ImageURL: user.ImageURL,
+		ImageUrl: user.ImageURL,
 	}
 }
 
-func (p *UserPresenter) GenerateGetUserByGithubIdResponse(user *entity.User) *presenter.GetUserByGithubIdResponse {
-	return &presenter.GetUserByGithubIdResponse{
-		ID:       strconv.FormatUint(user.ID, 10),
+func (p *UserPresenter) GenerateGetUserByGithubIdResponse(user *entity.User) *response.UserMeResponse {
+	return &response.UserMeResponse{
+		Id:       strconv.FormatUint(user.ID, 10),
 		Name:     user.Name,
-		ImageURL: user.ImageURL,
-	}
-}
-
-func (p *UserPresenter) GenerateCreateUserResponse(user *entity.User) *presenter.CreateUserResponse {
-	return &presenter.CreateUserResponse{
-		ID: strconv.FormatUint(user.ID, 10),
+		ImageUrl: user.ImageURL,
 	}
 }
