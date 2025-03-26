@@ -9,9 +9,10 @@ import (
 
 	"github.com/saitamau-maximum/meline/config"
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/base"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	model "github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase"
-	"github.com/saitamau-maximum/meline/usecase/presenter"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -23,13 +24,13 @@ type UpdateMessageFailed string
 type DeleteMessageFailed string
 
 type ExpectedCreateMessageResponse struct {
-	msg    *presenter.CreateMessageResponse
-	notify *presenter.NotifyMessageResponse
+	msg    *response.CreateMessageResponse
+	notify *response.NotifyResponse
 }
 
 type ExpectedCreateReplyResponse struct {
-	msg    *presenter.CreateMessageResponse
-	notify *presenter.NotifyMessageResponse
+	msg    *response.CreateMessageResponse
+	notify *response.NotifyResponse
 }
 
 const (
@@ -52,14 +53,14 @@ func TestMessageInteractor_Success_GetMessagesByChannelID(t *testing.T) {
 
 	res, err := interactor.GetMessagesByChannelID(ctx, 1)
 
-	expected := &presenter.GetMessagesByChannelIDResponse{
-		Messages: []*presenter.Message{
+	expected := &response.GetByChannelIDResponse{
+		Messages: []*base.Message{
 			{
-				ID: "1",
-				User: &presenter.User{
-					ID:       "1",
+				Id: "1",
+				User: &base.User{
+					Id:       "1",
 					Name:     "User",
-					ImageURL: "https://example.com/image.png",
+					ImageUrl: "https://example.com/image.png",
 				},
 				Content:        "Hello, World!",
 				ReplyToMessage: nil,
@@ -86,39 +87,25 @@ func TestMessageInteractor_Success_Create(t *testing.T) {
 	res, notifyRes, userIDs, err := interactor.Create(ctx, 1, 1, "Hello, World!")
 
 	expected := &ExpectedCreateMessageResponse{
-		msg: &presenter.CreateMessageResponse{
-			Message: &presenter.Message{
-				ID: "1",
-				User: &presenter.User{
-					ID:       "1",
-					Name:     "User",
-					ImageURL: "https://example.com/image.png",
-				},
-				Content:        "Hello, World!",
-				ReplyToMessage: nil,
-				CreatedAt:      "0001-01-01 00:00:00 +0000 UTC",
-				UpdatedAt:      "0001-01-01 00:00:00 +0000 UTC",
+		msg: &response.CreateMessageResponse{},
+		notify: &response.NotifyResponse{
+			NotifyMeta: &base.NotifyMeta{
+				TypeId: config.NOTIFY_MESSAGE,
 			},
-			ChannelID: "1",
-		},
-		notify: &presenter.NotifyMessageResponse{
-			NotifyMeta: presenter.NotifyMeta{
-				TypeID: config.NOTIFY_MESSAGE,
-			},
-			Payload: presenter.Payload{
-				Message: &presenter.Message{
-					ID: "1",
-					User: &presenter.User{
-						ID:       "1",
+			Payload: &base.Payload{
+				Message: &base.Message{
+					Id: "1",
+					User: &base.User{
+						Id:       "1",
 						Name:     "User",
-						ImageURL: "https://example.com/image.png",
+						ImageUrl: "https://example.com/image.png",
 					},
 					Content:        "Hello, World!",
 					ReplyToMessage: nil,
 					CreatedAt:      "0001-01-01 00:00:00 +0000 UTC",
 					UpdatedAt:      "0001-01-01 00:00:00 +0000 UTC",
 				},
-				ChannelID: "1",
+				ChannelId: "1",
 			},
 		},
 	}
@@ -142,39 +129,25 @@ func TestMessageInteractor_Success_CreateReply(t *testing.T) {
 	res, notifyRes, userIDs, err := interactor.CreateReply(ctx, 1, 1, "1", "Hello, World!")
 
 	expected := &ExpectedCreateReplyResponse{
-		msg: &presenter.CreateMessageResponse{
-			Message: &presenter.Message{
-				ID: "1",
-				User: &presenter.User{
-					ID:       "1",
-					Name:     "User",
-					ImageURL: "https://example.com/image.png",
-				},
-				Content:        "Hello, World!",
-				ReplyToMessage: nil,
-				CreatedAt:      "0001-01-01 00:00:00 +0000 UTC",
-				UpdatedAt:      "0001-01-01 00:00:00 +0000 UTC",
+		msg: &response.CreateMessageResponse{},
+		notify: &response.NotifyResponse{
+			NotifyMeta: &base.NotifyMeta{
+				TypeId: config.NOTIFY_MESSAGE,
 			},
-			ChannelID: "1",
-		},
-		notify: &presenter.NotifyMessageResponse{
-			NotifyMeta: presenter.NotifyMeta{
-				TypeID: config.NOTIFY_MESSAGE,
-			},
-			Payload: presenter.Payload{
-				Message: &presenter.Message{
-					ID: "1",
-					User: &presenter.User{
-						ID:       "1",
+			Payload: &base.Payload{
+				Message: &base.Message{
+					Id: "1",
+					User: &base.User{
+						Id:       "1",
 						Name:     "User",
-						ImageURL: "https://example.com/image.png",
+						ImageUrl: "https://example.com/image.png",
 					},
 					Content:        "Hello, World!",
 					ReplyToMessage: nil,
 					CreatedAt:      "0001-01-01 00:00:00 +0000 UTC",
 					UpdatedAt:      "0001-01-01 00:00:00 +0000 UTC",
 				},
-				ChannelID: "1",
+				ChannelId: "1",
 			},
 		},
 	}
@@ -441,18 +414,18 @@ func (m *mockNotifyRepository) FindByUserID(ctx context.Context, userID uint64) 
 
 type mockMessagePresenter struct{}
 
-func (m *mockMessagePresenter) GenerateGetMessagesByChannelIDResponse(messages []*entity.Message) *presenter.GetMessagesByChannelIDResponse {
-	messagesResponse := &presenter.GetMessagesByChannelIDResponse{
-		Messages: []*presenter.Message{},
+func (m *mockMessagePresenter) GenerateGetMessagesByChannelIDResponse(messages []*entity.Message) *response.GetByChannelIDResponse {
+	messagesResponse := &response.GetByChannelIDResponse{
+		Messages: []*base.Message{},
 	}
 	for _, message := range messages {
-		var replyToMessage *presenter.ReplyToMessage = nil
-		messagesResponse.Messages = append(messagesResponse.Messages, &presenter.Message{
-			ID: message.ID,
-			User: &presenter.User{
-				ID:       strconv.FormatUint(message.User.ID, 10),
+		var replyToMessage *base.ReplyToMessage = nil
+		messagesResponse.Messages = append(messagesResponse.Messages, &base.Message{
+			Id: message.ID,
+			User: &base.User{
+				Id:       strconv.FormatUint(message.User.ID, 10),
 				Name:     message.User.Name,
-				ImageURL: message.User.ImageURL,
+				ImageUrl: message.User.ImageURL,
 			},
 			Content:        message.Content,
 			ReplyToMessage: replyToMessage,
@@ -464,47 +437,31 @@ func (m *mockMessagePresenter) GenerateGetMessagesByChannelIDResponse(messages [
 	return messagesResponse
 }
 
-func (m *mockMessagePresenter) GenerateCreateMessageResponse(message *entity.Message) *presenter.CreateMessageResponse {
-	var replyToMessage *presenter.ReplyToMessage = nil
-
-	return &presenter.CreateMessageResponse{
-		Message: &presenter.Message{
-			ID: message.ID,
-			User: &presenter.User{
-				ID:       strconv.FormatUint(message.User.ID, 10),
-				Name:     message.User.Name,
-				ImageURL: message.User.ImageURL,
-			},
-			Content:        message.Content,
-			ReplyToMessage: replyToMessage,
-			CreatedAt:      message.CreatedAt.String(),
-			UpdatedAt:      message.UpdatedAt.String(),
-		},
-		ChannelID: strconv.FormatUint(message.ChannelID, 10),
-	}
+func (m *mockMessagePresenter) GenerateCreateMessageResponse(message *entity.Message) *response.CreateMessageResponse {
+	return &response.CreateMessageResponse{}
 }
 
 type mockNotifyPresenter struct{}
 
-func (m *mockNotifyPresenter) GenerateNotifyMessageResponse(message *entity.Message) *presenter.NotifyMessageResponse {
-	return &presenter.NotifyMessageResponse{
-		NotifyMeta: presenter.NotifyMeta{
-			TypeID: config.NOTIFY_MESSAGE,
+func (m *mockNotifyPresenter) GenerateNotifyMessageResponse(message *entity.Message) *response.NotifyResponse {
+	return &response.NotifyResponse{
+		NotifyMeta: &base.NotifyMeta{
+			TypeId: config.NOTIFY_MESSAGE,
 		},
-		Payload: presenter.Payload{
-			Message: &presenter.Message{
-				ID: message.ID,
-				User: &presenter.User{
-					ID:       strconv.FormatUint(message.User.ID, 10),
+		Payload: &base.Payload{
+			Message: &base.Message{
+				Id: message.ID,
+				User: &base.User{
+					Id:       strconv.FormatUint(message.User.ID, 10),
 					Name:     message.User.Name,
-					ImageURL: message.User.ImageURL,
+					ImageUrl: message.User.ImageURL,
 				},
 				Content:        message.Content,
 				ReplyToMessage: nil,
 				CreatedAt:      message.CreatedAt.String(),
 				UpdatedAt:      message.UpdatedAt.String(),
 			},
-			ChannelID: strconv.FormatUint(message.ChannelID, 10),
+			ChannelId: strconv.FormatUint(message.ChannelID, 10),
 		},
 	}
 }

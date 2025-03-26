@@ -1,6 +1,9 @@
 package presenter
 
-import "github.com/saitamau-maximum/meline/domain/entity"
+import (
+	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
+)
 
 type Message struct {
 	ID             string          `json:"id"`
@@ -27,6 +30,6 @@ type CreateMessageResponse struct {
 }
 
 type IMessagePresenter interface {
-	GenerateGetMessagesByChannelIDResponse(messages []*entity.Message) *GetMessagesByChannelIDResponse
-	GenerateCreateMessageResponse(message *entity.Message) *CreateMessageResponse
+	GenerateGetMessagesByChannelIDResponse(messages []*entity.Message) *response.GetByChannelIDResponse
+	GenerateCreateMessageResponse(message *entity.Message) *response.CreateMessageResponse
 }

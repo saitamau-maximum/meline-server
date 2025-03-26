@@ -4,6 +4,8 @@ import (
 	"strconv"
 
 	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/base"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
@@ -13,29 +15,29 @@ func NewMessagePresenter() presenter.IMessagePresenter {
 	return &MessagePresenter{}
 }
 
-func (p *MessagePresenter) GenerateGetMessagesByChannelIDResponse(messages []*entity.Message) *presenter.GetMessagesByChannelIDResponse {
-	messagesResponse := &presenter.GetMessagesByChannelIDResponse{
-		Messages: []*presenter.Message{},
+func (p *MessagePresenter) GenerateGetMessagesByChannelIDResponse(messages []*entity.Message) *response.GetByChannelIDResponse {
+	messagesResponse := &response.GetByChannelIDResponse{
+		Messages: []*base.Message{},
 	}
 	for _, message := range messages {
-		var replyToMessage *presenter.ReplyToMessage = nil
+		var replyToMessage *base.ReplyToMessage = nil
 		if message.ReplyToMessage != nil {
-			replyToMessage = &presenter.ReplyToMessage{
-				ID: message.ReplyToMessage.ID,
-				User: &presenter.User{
-					ID:       strconv.FormatUint(message.ReplyToMessage.User.ID, 10),
+			replyToMessage = &base.ReplyToMessage{
+				Id: message.ReplyToMessage.ID,
+				User: &base.User{
+					Id:       strconv.FormatUint(message.ReplyToMessage.User.ID, 10),
 					Name:     message.ReplyToMessage.User.Name,
-					ImageURL: message.ReplyToMessage.User.ImageURL,
+					ImageUrl: message.ReplyToMessage.User.ImageURL,
 				},
 				Content: message.ReplyToMessage.Content,
 			}
 		}
-		messagesResponse.Messages = append(messagesResponse.Messages, &presenter.Message{
-			ID: message.ID,
-			User: &presenter.User{
-				ID:       strconv.FormatUint(message.User.ID, 10),
+		messagesResponse.Messages = append(messagesResponse.Messages, &base.Message{
+			Id: message.ID,
+			User: &base.User{
+				Id:       strconv.FormatUint(message.User.ID, 10),
 				Name:     message.User.Name,
-				ImageURL: message.User.ImageURL,
+				ImageUrl: message.User.ImageURL,
 			},
 			Content:        message.Content,
 			ReplyToMessage: replyToMessage,
@@ -47,33 +49,6 @@ func (p *MessagePresenter) GenerateGetMessagesByChannelIDResponse(messages []*en
 	return messagesResponse
 }
 
-func (p *MessagePresenter) GenerateCreateMessageResponse(message *entity.Message) *presenter.CreateMessageResponse {
-	var replyToMessage *presenter.ReplyToMessage = nil
-	if message.ReplyToMessage != nil {
-		replyToMessage = &presenter.ReplyToMessage{
-			ID: message.ReplyToMessage.ID,
-			User: &presenter.User{
-				ID:       strconv.FormatUint(message.ReplyToMessage.User.ID, 10),
-				Name:     message.ReplyToMessage.User.Name,
-				ImageURL: message.ReplyToMessage.User.ImageURL,
-			},
-			Content: message.ReplyToMessage.Content,
-		}
-	}
-
-	return &presenter.CreateMessageResponse{
-		Message: &presenter.Message{
-			ID: message.ID,
-			User: &presenter.User{
-				ID:       strconv.FormatUint(message.User.ID, 10),
-				Name:     message.User.Name,
-				ImageURL: message.User.ImageURL,
-			},
-			Content:        message.Content,
-			ReplyToMessage: replyToMessage,
-			CreatedAt:      message.CreatedAt.String(),
-			UpdatedAt:      message.UpdatedAt.String(),
-		},
-		ChannelID: strconv.FormatUint(message.ChannelID, 10),
-	}
+func (p *MessagePresenter) GenerateCreateMessageResponse(message *entity.Message) *response.CreateMessageResponse {
+	return &response.CreateMessageResponse{}
 }

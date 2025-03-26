@@ -1,6 +1,9 @@
 package presenter
 
-import "github.com/saitamau-maximum/meline/domain/entity"
+import (
+	"github.com/saitamau-maximum/meline/domain/entity"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
+)
 
 type NotifyMeta struct {
 	TypeID uint64 `json:"type_id"`
@@ -17,5 +20,5 @@ type NotifyMessageResponse struct {
 }
 
 type INotifyPresenter interface {
-	GenerateNotifyMessageResponse(message *entity.Message) *NotifyMessageResponse
+	GenerateNotifyMessageResponse(message *entity.Message) *response.NotifyResponse
 }
