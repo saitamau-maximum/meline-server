@@ -5,10 +5,11 @@ import (
 	"unicode/utf8"
 
 	"github.com/saitamau-maximum/meline/config"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/request"
 )
 
 type CreateMessageRequest struct {
-	Content string `json:"content"`
+	request.CreateMessageRequest
 }
 
 func (r *CreateMessageRequest) Validate() error {

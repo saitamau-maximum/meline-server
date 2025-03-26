@@ -6,14 +6,15 @@ import (
 	"github.com/saitamau-maximum/meline/config"
 	"github.com/saitamau-maximum/meline/domain/entity"
 	"github.com/saitamau-maximum/meline/domain/repository"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	model "github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
 type IMessageInteractor interface {
-	GetMessagesByChannelID(ctx context.Context, channelID uint64) (*presenter.GetMessagesByChannelIDResponse, error)
-	Create(ctx context.Context, userID, channelID uint64, content string) (*presenter.CreateMessageResponse, *presenter.NotifyMessageResponse, []uint64, error)
-	CreateReply(ctx context.Context, userID, channelID uint64, parentMessageID string, content string) (*presenter.CreateMessageResponse, *presenter.NotifyMessageResponse, []uint64, error)
+	GetMessagesByChannelID(ctx context.Context, channelID uint64) (*response.GetByChannelIDResponse, error)
+	Create(ctx context.Context, userID, channelID uint64, content string) (*response.CreateMessageResponse, *response.NotifyResponse, []uint64, error)
+	CreateReply(ctx context.Context, userID, channelID uint64, parentMessageID string, content string) (*response.CreateMessageResponse, *response.NotifyResponse, []uint64, error)
 	Update(ctx context.Context, id string, content string) error
 	Delete(ctx context.Context, id string) error
 }
@@ -36,7 +37,7 @@ func NewMessageInteractor(messageRepository repository.IMessageRepository, userR
 	}
 }
 
-func (i *messageInteractor) GetMessagesByChannelID(ctx context.Context, channelID uint64) (*presenter.GetMessagesByChannelIDResponse, error) {
+func (i *messageInteractor) GetMessagesByChannelID(ctx context.Context, channelID uint64) (*response.GetByChannelIDResponse, error) {
 	messages, err := i.messageRepository.FindByChannelID(ctx, channelID)
 	if err != nil {
 		return nil, err
@@ -50,7 +51,7 @@ func (i *messageInteractor) GetMessagesByChannelID(ctx context.Context, channelI
 	return i.messagePresenter.GenerateGetMessagesByChannelIDResponse(entitiedMessages), nil
 }
 
-func (i *messageInteractor) Create(ctx context.Context, userID, channelID uint64, content string) (*presenter.CreateMessageResponse, *presenter.NotifyMessageResponse, []uint64, error) {
+func (i *messageInteractor) Create(ctx context.Context, userID, channelID uint64, content string) (*response.CreateMessageResponse, *response.NotifyResponse, []uint64, error) {
 	message := model.NewMessageModel(channelID, userID, content)
 
 	if err := i.messageRepository.Create(ctx, message); err != nil {
@@ -90,7 +91,7 @@ func (i *messageInteractor) Create(ctx context.Context, userID, channelID uint64
 	return i.messagePresenter.GenerateCreateMessageResponse(createdMsg.ToMessageEntity()), i.notifyPresenter.GenerateNotifyMessageResponse(createdMsg.ToMessageEntity()), userIDs, nil
 }
 
-func (i *messageInteractor) CreateReply(ctx context.Context, userID, channelID uint64, parentMessageID string, content string) (*presenter.CreateMessageResponse, *presenter.NotifyMessageResponse, []uint64, error) {
+func (i *messageInteractor) CreateReply(ctx context.Context, userID, channelID uint64, parentMessageID string, content string) (*response.CreateMessageResponse, *response.NotifyResponse, []uint64, error) {
 	message := model.NewMessageModel(channelID, userID, content)
 	message.ReplyToMessageID = parentMessageID
 

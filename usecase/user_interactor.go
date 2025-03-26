@@ -5,14 +5,14 @@ import (
 	"database/sql"
 
 	"github.com/saitamau-maximum/meline/domain/repository"
+	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 )
 
 type IUserInteractor interface {
-	GetUserByID(ctx context.Context, id uint64) (*presenter.GetUserByIdResponse, error)
-	GetUserByGithubIDOrCreate(ctx context.Context, githubID, userName, imageUrl string) (*presenter.GetUserByGithubIdResponse, error)
-	CreateUser(ctx context.Context, githubID, name, imageURL string) (*presenter.CreateUserResponse, error)
+	GetUserByID(ctx context.Context, id uint64) (*response.UserMeResponse, error)
+	GetUserByGithubIDOrCreate(ctx context.Context, githubID, userName, imageUrl string) (*response.UserMeResponse, error)
 	IsUserExists(ctx context.Context, userID uint64) (bool, error)
 }
 
@@ -28,7 +28,7 @@ func NewUserInteractor(repository repository.IUserRepository, userPresenter pres
 	}
 }
 
-func (i *UserInteractor) GetUserByID(ctx context.Context, id uint64) (*presenter.GetUserByIdResponse, error) {
+func (i *UserInteractor) GetUserByID(ctx context.Context, id uint64) (*response.UserMeResponse, error) {
 	user, err := i.userRepository.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (i *UserInteractor) GetUserByID(ctx context.Context, id uint64) (*presenter
 	return i.userPresenter.GenerateGetUserByIdResponse(user.ToUserEntity()), nil
 }
 
-func (i *UserInteractor) GetUserByGithubIDOrCreate(ctx context.Context, githubID, userName, imageUrl string) (*presenter.GetUserByGithubIdResponse, error) {
+func (i *UserInteractor) GetUserByGithubIDOrCreate(ctx context.Context, githubID, userName, imageUrl string) (*response.UserMeResponse, error) {
 	user, err := i.userRepository.FindByProviderID(ctx, githubID)
 	if err != nil {
 		if err := sql.ErrNoRows; err != nil {
@@ -48,40 +48,21 @@ func (i *UserInteractor) GetUserByGithubIDOrCreate(ctx context.Context, githubID
 			}
 
 			if _err := i.userRepository.Create(ctx, newUser); _err != nil {
-				return &presenter.GetUserByGithubIdResponse{}, _err
+				return &response.UserMeResponse{}, _err
 			}
 
 			createdUser, _err := i.userRepository.FindByProviderID(ctx, githubID)
 			if _err != nil {
-				return &presenter.GetUserByGithubIdResponse{}, _err
+				return &response.UserMeResponse{}, _err
 			}
 
 			user = createdUser
 		} else {
-			return &presenter.GetUserByGithubIdResponse{}, err
+			return &response.UserMeResponse{}, err
 		}
 	}
 
 	return i.userPresenter.GenerateGetUserByGithubIdResponse(user.ToUserEntity()), nil
-}
-
-func (i *UserInteractor) CreateUser(ctx context.Context, providerID, name, imageURL string) (*presenter.CreateUserResponse, error) {
-	userModel := &model.User{
-		ProviderID: providerID,
-		Name:       name,
-		ImageURL:   imageURL,
-	}
-
-	if err := i.userRepository.Create(ctx, userModel); err != nil {
-		return nil, err
-	}
-
-	createdUser, err := i.userRepository.FindByProviderID(ctx, providerID)
-	if err != nil {
-		return nil, err
-	}
-
-	return i.userPresenter.GenerateCreateUserResponse(createdUser.ToUserEntity()), nil
 }
 
 func (i *UserInteractor) IsUserExists(ctx context.Context, userID uint64) (bool, error) {
