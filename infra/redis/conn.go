@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	REDIS_ADDR = "localhost:6379"
+	REDIS_ADDR     = "localhost:6379"
 	REDIS_PASSWORD = ""
-	REDIS_DB = 0
+	REDIS_DB       = 0
 )
 
 func NewClient(ctx context.Context, opt *redis.Options) (*redis.Client, error) {

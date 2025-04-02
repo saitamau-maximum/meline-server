@@ -2,10 +2,11 @@ package redis
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
 	"github.com/redis/go-redis/v9"
-	"github.com/saitamau-maximum/meline/config"
 	"github.com/saitamau-maximum/meline/domain/repository"
 )
 
@@ -20,19 +21,34 @@ func NewWebPushRepository(redisClient *redis.Client) repository.IWebPushReposito
 }
 
 func (r *WebPushRepository) SetSubscription(ctx context.Context, key string, subscription map[string]*webpush.Subscription) error {
-	_, err := r.redisClient.HSet(ctx, key, subscription).Result()
+	byteSubscription, err := json.Marshal(subscription)
 	if err != nil {
 		return err
+	}
+
+	_, _err := r.redisClient.HSet(ctx, key, byteSubscription).Result()
+	if _err != nil {
+		return _err
 	}
 	return nil
 }
 
 func (r *WebPushRepository) GetSubscription(ctx context.Context, key string) (*webpush.Subscription, error) {
-	subscription, err := r.redisClient.HGet(ctx, key, config.SUBSCRIPTION_FIELD).Result()
+	subscription, err := r.redisClient.Get(ctx, key).Result()
 	if err != nil {
 		return nil, err
 	}
-	return &webpush.Subscription{Endpoint: subscription}, nil
+
+	var sub webpush.Subscription
+	err = json.Unmarshal([]byte(subscription), &sub)
+	if err != nil {
+		return nil, err
+	}
+	if sub.Endpoint == "" {
+		return nil, fmt.Errorf("[ERROR] subscription not found")
+	}
+
+	return &sub, nil
 }
 
 func (r *WebPushRepository) DeleteSubscription(ctx context.Context, key string) error {
@@ -42,4 +58,3 @@ func (r *WebPushRepository) DeleteSubscription(ctx context.Context, key string) 
 	}
 	return nil
 }
-
