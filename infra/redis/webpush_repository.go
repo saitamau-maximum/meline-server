@@ -20,7 +20,7 @@ func NewWebPushRepository(redisClient *redis.Client) repository.IWebPushReposito
 	}
 }
 
-func (r *WebPushRepository) SetSubscription(ctx context.Context, key string, subscription map[string]*webpush.Subscription) error {
+func (r *WebPushRepository) SetSubscription(ctx context.Context, key string, subscription *webpush.Subscription) error {
 	byteSubscription, err := json.Marshal(subscription)
 	if err != nil {
 		return err
@@ -49,6 +49,37 @@ func (r *WebPushRepository) GetSubscription(ctx context.Context, key string) (*w
 	}
 
 	return &sub, nil
+}
+
+func (r *WebPushRepository) GetSubscriptions(ctx context.Context, keys []string) ([]*webpush.Subscription, error) {
+	subscriptions := make([]*webpush.Subscription, 0)
+	_, err := r.redisClient.Pipelined(ctx, func(pipe redis.Pipeliner) error {
+		for _, key := range keys {
+			subscription, err := pipe.Get(ctx, key).Result()
+			if err != nil {
+				return err
+			}
+			var sub webpush.Subscription
+			err = json.Unmarshal([]byte(subscription), &sub)
+			if err != nil {
+				return err
+			}
+			if sub.Endpoint == "" {
+				return nil
+			}
+
+			subscriptions = append(subscriptions, &sub)
+		}
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(subscriptions) == 0 {
+		return nil, fmt.Errorf("[ERROR] subscriptions not found")
+	}
+
+	return subscriptions, nil
 }
 
 func (r *WebPushRepository) DeleteSubscription(ctx context.Context, key string) error {
