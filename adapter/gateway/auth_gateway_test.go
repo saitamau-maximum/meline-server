@@ -15,8 +15,8 @@ import (
 
 	"github.com/saitamau-maximum/meline/adapter/gateway"
 	"github.com/saitamau-maximum/meline/adapter/response"
-	schemaResponse "github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/config"
+	schemaResponse "github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 )
 
 type FailAuthUserNotFound string

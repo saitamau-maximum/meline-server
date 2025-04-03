@@ -18,6 +18,12 @@ const (
 	_CLIENT_ORIGIN           = "CLIENT_ORIGIN"
 	_JWT_SECRET              = "JWT_SECRET"
 	_OAUTH_OTT_EXPIRE        = "OAUTH_OTT_EXPIRE"
+	_REDIS_HOST              = "REDIS_HOST"
+	_REDIS_PORT              = "REDIS_PORT"
+	_REDIS_PASSWORD          = "REDIS_PASSWORD"
+	_REDIS_DB                = "REDIS_DB"
+	_VAPID_PUBLIC_KEY        = "VAPID_PUBLIC_KEY"
+	_VAPID_PRIVATE_KEY       = "VAPID_PRIVATE_KEY"
 )
 
 var (
@@ -32,6 +38,12 @@ var (
 	CLIENT_ORIGIN           = os.Getenv(_CLIENT_ORIGIN)
 	JWT_SECRET              = os.Getenv(_JWT_SECRET)
 	OAUTH_OTT_EXPIRE        = os.Getenv(_OAUTH_OTT_EXPIRE)
+	REDIS_HOST              = os.Getenv(_REDIS_HOST)
+	REDIS_PORT              = os.Getenv(_REDIS_PORT)
+	REDIS_PASSWORD          = os.Getenv(_REDIS_PASSWORD)
+	REDIS_DB                = os.Getenv(_REDIS_DB)
+	VAPID_PUBLIC_KEY        = os.Getenv(_VAPID_PUBLIC_KEY)
+	VAPID_PRIVATE_KEY       = os.Getenv(_VAPID_PRIVATE_KEY)
 
 	IsDev = ENV == "development"
 
@@ -52,6 +64,14 @@ var (
 		_FRONT_OAUTH_SUCCESS_URL,
 		_JWT_SECRET,
 		_OAUTH_OTT_EXPIRE,
+		_VAPID_PUBLIC_KEY,
+		_VAPID_PRIVATE_KEY,
+	}
+	requiredRedisEnv = []string{
+		_REDIS_HOST,
+		_REDIS_PORT,
+		_REDIS_PASSWORD,
+		_REDIS_DB,
 	}
 )
 
@@ -67,6 +87,16 @@ func ValidateDBEnv() error {
 
 func ValidateAppEnv() error {
 	for _, env := range requiredAppEnv {
+		if os.Getenv(env) == "" {
+			return fmt.Errorf("%s is not set", env)
+		}
+	}
+
+	return nil
+}
+
+func ValidateRedisEnv() error {
+	for _, env := range requiredRedisEnv {
 		if os.Getenv(env) == "" {
 			return fmt.Errorf("%s is not set", env)
 		}
