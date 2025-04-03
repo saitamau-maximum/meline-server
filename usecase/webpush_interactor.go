@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strconv"
 
-	"golang.org/x/sync/errgroup"
 	"github.com/SherClockHolmes/webpush-go"
 	"github.com/saitamau-maximum/meline/config"
 	"github.com/saitamau-maximum/meline/domain/repository"
 	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
+	"golang.org/x/sync/errgroup"
 )
 
 type IWebPushInteractor interface {
@@ -21,7 +21,7 @@ type IWebPushInteractor interface {
 }
 
 type WebPushInteractor struct {
-	channelRepository 	repository.IChannelRepository
+	channelRepository     repository.IChannelRepository
 	webPushRepository     repository.IWebPushRepository
 	pushServiceRepository repository.IPushServiceRepository
 	webPushPresenter      presenter.IWebPushPresenter
@@ -29,7 +29,7 @@ type WebPushInteractor struct {
 
 func NewWebPushInteractor(channelRepository repository.IChannelRepository, webPushRepository repository.IWebPushRepository, pushServiceRepository repository.IPushServiceRepository, webPushPresenter presenter.IWebPushPresenter) IWebPushInteractor {
 	return &WebPushInteractor{
-		channelRepository: 	channelRepository,
+		channelRepository:     channelRepository,
 		webPushRepository:     webPushRepository,
 		pushServiceRepository: pushServiceRepository,
 		webPushPresenter:      webPushPresenter,
@@ -67,7 +67,7 @@ func (i *WebPushInteractor) SendWebPushNotification(ctx context.Context, channel
 	for _, user := range users {
 		userIDs = append(userIDs, strconv.FormatUint(user.ID, 10))
 	}
-	
+
 	subscriptions, err = i.webPushRepository.GetSubscriptions(ctx, userIDs)
 	if err != nil {
 		return fmt.Errorf("[ERROR] : failed to get subscriptions: %v", err)
