@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/SherClockHolmes/webpush-go"
 	"github.com/labstack/echo/v4"
@@ -46,7 +45,7 @@ func (h *WebPushHandler) StoreSubscription(c echo.Context) error {
 
 	userId := c.Get("user_id").(uint64)
 
-	if err := h.pushServiceInteractor.StoreSubscription(c.Request().Context(), strconv.FormatUint(userId, 10), subscription); err != nil {
+	if err := h.pushServiceInteractor.StoreSubscription(c.Request().Context(), userId, subscription); err != nil {
 		return c.JSON(http.StatusInternalServerError, err)
 	}
 

@@ -3,19 +3,20 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/SherClockHolmes/webpush-go"
+	"github.com/google/uuid"
 	"github.com/saitamau-maximum/meline/config"
 	"github.com/saitamau-maximum/meline/domain/repository"
 	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
+	model "github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase/presenter"
 	"golang.org/x/sync/errgroup"
 )
 
 type IWebPushInteractor interface {
-	StoreSubscription(ctx context.Context, userID string, subscription *webpush.Subscription) error
-	DeleteSubscription(ctx context.Context, key string) error
+	StoreSubscription(ctx context.Context, userID uint64, subscription *webpush.Subscription) error
+	DeleteSubscription(ctx context.Context, id string) error
 	SendWebPushNotification(ctx context.Context, channelID uint64, message []byte) error
 	GetPublicKey() *response.GetPublicKeyResponse
 }
@@ -36,8 +37,16 @@ func NewWebPushInteractor(channelRepository repository.IChannelRepository, webPu
 	}
 }
 
-func (i *WebPushInteractor) StoreSubscription(ctx context.Context, userID string, subscription *webpush.Subscription) error {
-	if i.webPushRepository.SetSubscription(ctx, userID, subscription) != nil {
+func (i *WebPushInteractor) StoreSubscription(ctx context.Context, userID uint64, subscription *webpush.Subscription) error {
+	subscriptionModel := &model.Subscription{
+		ID:       i.generateSubscriptionID(),
+		UserID:   userID,
+		Endpoint: subscription.Endpoint,
+		P256dh:   subscription.Keys.P256dh,
+		Auth:     subscription.Keys.Auth,
+	}
+
+	if i.webPushRepository.Create(ctx, subscriptionModel) != nil {
 		return fmt.Errorf("[ERROR] : failed to store subscription")
 	}
 
@@ -45,7 +54,7 @@ func (i *WebPushInteractor) StoreSubscription(ctx context.Context, userID string
 }
 
 func (i *WebPushInteractor) DeleteSubscription(ctx context.Context, key string) error {
-	if err := i.webPushRepository.DeleteSubscription(ctx, key); err != nil {
+	if err := i.webPushRepository.Delete(ctx, key); err != nil {
 		return fmt.Errorf("[ERROR] : failed to delete subscription")
 	}
 	return nil
@@ -62,13 +71,14 @@ func (i *WebPushInteractor) SendWebPushNotification(ctx context.Context, channel
 		return nil
 	}
 
-	subscriptions := make([]*webpush.Subscription, 0)
-	userIDs := make([]string, 0)
+	subscriptionConditions := make([]*model.Subscription, 0)
 	for _, user := range users {
-		userIDs = append(userIDs, strconv.FormatUint(user.ID, 10))
+		subscriptionConditions = append(subscriptionConditions, &model.Subscription{
+			UserID: user.ID,
+		})
 	}
 
-	subscriptions, err = i.webPushRepository.GetSubscriptions(ctx, userIDs)
+	subscriptions, err := i.webPushRepository.FindByUserIds(ctx, subscriptionConditions)
 	if err != nil {
 		return fmt.Errorf("[ERROR] : failed to get subscriptions: %v", err)
 	}
@@ -80,7 +90,7 @@ func (i *WebPushInteractor) SendWebPushNotification(ctx context.Context, channel
 
 	for _, subscription := range subscriptions {
 		eg.Go(func() error {
-			if err := i.pushServiceRepository.SendWebPushNotification(ctx, message, subscription); err != nil {
+			if err := i.pushServiceRepository.SendWebPushNotification(ctx, message, subscription.ToWebPushSubscription()); err != nil {
 				return err
 			}
 			return nil
@@ -97,4 +107,8 @@ func (i *WebPushInteractor) SendWebPushNotification(ctx context.Context, channel
 func (i *WebPushInteractor) GetPublicKey() *response.GetPublicKeyResponse {
 	pubKey := config.GetEnv("VAPID_PUBLIC_KEY", "")
 	return i.webPushPresenter.GetPublicKeyResponse(pubKey)
+}
+
+func (i *WebPushInteractor) generateSubscriptionID() string {
+	return uuid.New().String()
 }

@@ -3,12 +3,11 @@ package repository
 import (
 	"context"
 
-	webpush "github.com/SherClockHolmes/webpush-go"
+	model "github.com/saitamau-maximum/meline/models"
 )
 
 type IWebPushRepository interface {
-	SetSubscription(ctx context.Context, key string, subscription *webpush.Subscription) error
-	GetSubscription(ctx context.Context, key string) (*webpush.Subscription, error)
-	GetSubscriptions(ctx context.Context, keys []string) ([]*webpush.Subscription, error)
-	DeleteSubscription(ctx context.Context, key string) error
+	Create(ctx context.Context, subscription *model.Subscription) error
+	FindByUserIds(ctx context.Context, subscriptions []*model.Subscription) ([]*model.Subscription, error)
+	Delete(ctx context.Context, id string) error
 }

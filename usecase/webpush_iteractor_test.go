@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/saitamau-maximum/meline/generated/proto/go/schema/response"
+	model "github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase"
 	"github.com/stretchr/testify/assert"
 
@@ -29,7 +30,7 @@ func TestWebPushInteractor_Success_StoreSubscription(t *testing.T) {
 		},
 	}
 
-	err := webPushInteractor.StoreSubscription(ctx, "test-key", sub)
+	err := webPushInteractor.StoreSubscription(ctx, 1, sub)
 	assert.NoError(t, err)
 }
 
@@ -50,7 +51,7 @@ func TestWebPushInteractor_Failed_StoreSubscription(t *testing.T) {
 	}
 
 	ctx = context.WithValue(ctx, "is_set_test_fail", true)
-	err := webPushInteractor.StoreSubscription(ctx, "test-key", sub)
+	err := webPushInteractor.StoreSubscription(ctx, 1, sub)
 	assert.Error(t, err)
 }
 
@@ -118,7 +119,7 @@ func TestWebPushInteractor_Success_GetPublicKey(t *testing.T) {
 
 type mockWebPushRepository struct{}
 
-func (m *mockWebPushRepository) SetSubscription(ctx context.Context, key string, subscription *webpush.Subscription) error {
+func (m *mockWebPushRepository) Create(ctx context.Context, subscription *model.Subscription) error {
 	if ctx.Value("is_set_test_fail") != nil {
 		return fmt.Errorf("failed to set subscription")
 	}
@@ -126,40 +127,33 @@ func (m *mockWebPushRepository) SetSubscription(ctx context.Context, key string,
 	return nil
 }
 
-func (m *mockWebPushRepository) GetSubscription(ctx context.Context, key string) (*webpush.Subscription, error) {
-	if ctx.Value("is_get_test_fail") != nil {
-		return nil, fmt.Errorf("failed to get subscription")
-	}
-
-	return &webpush.Subscription{
-		Endpoint: "https://example.com/endpoint",
-		Keys: webpush.Keys{
-			Auth:   "auth-key",
-			P256dh: "p256dh-key",
-		},
-	}, nil
-}
-
-func (m *mockWebPushRepository) GetSubscriptions(ctx context.Context, keys []string) ([]*webpush.Subscription, error) {
+func (m *mockWebPushRepository) FindByUserIds(ctx context.Context, subscriptions []*model.Subscription) ([]*model.Subscription, error) {
 	if ctx.Value("is_get_test_fail") != nil {
 		return nil, fmt.Errorf("failed to get subscriptions")
 	}
 
-	subscriptions := make([]*webpush.Subscription, len(keys))
-	for range keys {
-		subscriptions = append(subscriptions, &webpush.Subscription{
+	// Mocking the response
+	subscriptions = []*model.Subscription{
+		{
+			ID:       "1",
+			UserID:   1,
 			Endpoint: "https://example.com/endpoint",
-			Keys: webpush.Keys{
-				Auth:   "auth-key",
-				P256dh: "p256dh-key",
-			},
-		})
+			P256dh:   "p256dh-key",
+			Auth:     "auth-key",
+		},
+		{
+			ID:       "2",
+			UserID:   2,
+			Endpoint: "https://example.com/endpoint2",
+			P256dh:   "p256dh-key2",
+			Auth:     "auth-key2",
+		},
 	}
 
 	return subscriptions, nil
 }
 
-func (m *mockWebPushRepository) DeleteSubscription(ctx context.Context, key string) error {
+func (m *mockWebPushRepository) Delete(ctx context.Context, id string) error {
 	if ctx.Value("is_delete_test_fail") != nil {
 		return fmt.Errorf("failed to delete subscription")
 	}
