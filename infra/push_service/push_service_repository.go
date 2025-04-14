@@ -19,8 +19,8 @@ func NewPushServiceRepository() repository.IPushServiceRepository {
 
 func (r *PushServiceRepository) SendWebPushNotification(ctx context.Context, message []byte, subscription *webpush.Subscription) error {
 	res, err := webpush.SendNotification(message, subscription, &webpush.Options{
-		VAPIDPublicKey:  config.GetEnv("VAPID_PUBLIC_KEY", ""),
-		VAPIDPrivateKey: config.GetEnv("VAPID_PRIVATE_KEY", ""),
+		VAPIDPublicKey:  config.VAPID_PUBLIC_KEY,
+		VAPIDPrivateKey: config.VAPID_PRIVATE_KEY,
 		TTL:             int(24 * time.Hour / time.Second),
 	})
 	if err != nil {

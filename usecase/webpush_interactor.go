@@ -105,8 +105,7 @@ func (i *WebPushInteractor) SendWebPushNotification(ctx context.Context, channel
 }
 
 func (i *WebPushInteractor) GetPublicKey() *response.GetPublicKeyResponse {
-	pubKey := config.GetEnv("VAPID_PUBLIC_KEY", "")
-	return i.webPushPresenter.GetPublicKeyResponse(pubKey)
+	return i.webPushPresenter.GetPublicKeyResponse(config.VAPID_PUBLIC_KEY)
 }
 
 func (i *WebPushInteractor) generateSubscriptionID() string {
