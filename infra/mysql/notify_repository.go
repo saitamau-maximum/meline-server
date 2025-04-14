@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"context"
-	"sync"
 
 	"github.com/uptrace/bun"
 
@@ -12,7 +11,6 @@ import (
 
 type NotifyRepository struct {
 	db *bun.DB
-	mu sync.RWMutex
 }
 
 func NewNotifyRepository(db *bun.DB) repository.INotifyRepository {
@@ -32,9 +30,6 @@ func (r *NotifyRepository) FindByUserID(ctx context.Context, userID uint64) ([]*
 }
 
 func (r *NotifyRepository) BulkCreate(ctx context.Context, notifies []model.Notify) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	if _, err := r.db.NewInsert().Model(&notifies).Exec(ctx); err != nil {
 		return err
 	}

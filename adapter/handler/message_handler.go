@@ -14,12 +14,14 @@ import (
 
 type MessageHandler struct {
 	messageInteractor usecase.IMessageInteractor
+	webPushInteractor usecase.IWebPushInteractor
 	hub               *entity.Hub
 }
 
-func NewMessageHandler(messageGroup *echo.Group, messageInteractor usecase.IMessageInteractor, hub *entity.Hub) {
+func NewMessageHandler(messageGroup *echo.Group, messageInteractor usecase.IMessageInteractor, webPushInteractor usecase.IWebPushInteractor, hub *entity.Hub) {
 	messageHandler := &MessageHandler{
 		messageInteractor: messageInteractor,
+		webPushInteractor: webPushInteractor,
 		hub:               hub,
 	}
 
@@ -89,6 +91,11 @@ func (h *MessageHandler) Create(c echo.Context) error {
 	h.hub.BroadcastCh <- entity.NewBroadcastChEntity(jsonRes, parsedChannelId)
 	h.hub.NotifyBroadcastCh <- entity.NewNotifyBroadcastChEntity(jsonNotifyRes, userId, joinedUserIds, parsedChannelId)
 
+	if err := h.webPushInteractor.SendWebPushNotification(c.Request().Context(), parsedChannelId, jsonRes); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusInternalServerError, err)
+	}
+
 	return c.JSON(http.StatusCreated, res)
 }
 
@@ -134,6 +141,11 @@ func (h *MessageHandler) CreateReply(c echo.Context) error {
 
 	h.hub.BroadcastCh <- entity.NewBroadcastChEntity(jsonRes, channelIdUint64)
 	h.hub.NotifyBroadcastCh <- entity.NewNotifyBroadcastChEntity(jsonNotifyRes, userId, userIDs, channelIdUint64)
+
+	if err := h.webPushInteractor.SendWebPushNotification(c.Request().Context(), channelIdUint64, jsonRes); err != nil {
+		log.Println(err)
+		return c.JSON(http.StatusInternalServerError, err)
+	}
 
 	return c.JSON(http.StatusCreated, res)
 }

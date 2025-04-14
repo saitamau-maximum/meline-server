@@ -16,6 +16,7 @@ import (
 	"github.com/saitamau-maximum/meline/domain/entity"
 	"github.com/saitamau-maximum/meline/infra/github"
 	"github.com/saitamau-maximum/meline/infra/mysql"
+	pushservice "github.com/saitamau-maximum/meline/infra/push_service"
 	model "github.com/saitamau-maximum/meline/models"
 	"github.com/saitamau-maximum/meline/usecase"
 )
@@ -61,6 +62,9 @@ func main() {
 	channelRepository := mysql.NewChannelRepository(bunDB)
 	messageRepository := mysql.NewMessageRepository(bunDB)
 	notifyRepository := mysql.NewNotifyRepository(bunDB)
+	webPushRepository := mysql.NewWebPushRepository(bunDB)
+	pushServiceRepository := pushservice.NewPushServiceRepository()
+	webPushInteractor := usecase.NewWebPushInteractor(channelRepository, webPushRepository, pushServiceRepository, presenter.NewWebPushPresenter())
 	githubOAuthInteractor := usecase.NewGithubOAuthInteractor(oAuthRepository)
 	authInteractor := usecase.NewAuthInteractor()
 	channelInteractor := usecase.NewChannelInteractor(hub, channelRepository, userRepository, presenter.NewChannelPresenter())
@@ -75,8 +79,9 @@ func main() {
 	handler.NewUserHandler(apiGroup.Group("/user", authGateway.Auth), userInteractor)
 	channelGroup := apiGroup.Group("/channel", authGateway.Auth)
 	handler.NewChannelHandler(channelGroup, channelInteractor)
-	handler.NewMessageHandler(channelGroup.Group("/:channel_id/message"), messageInteractor, hub)
+	handler.NewMessageHandler(channelGroup.Group("/:channel_id/message"), messageInteractor, webPushInteractor, hub)
 	handler.NewWebSocketHandler(apiGroup.Group("/ws", authGateway.Auth), messageClientInteractor, notifyClientInteractor, hub)
+	handler.NewWebPushHandler(apiGroup.Group("/webpush"), webPushInteractor)
 
 	apiGroup.GET("/", authGateway.Auth(func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")

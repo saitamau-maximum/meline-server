@@ -18,6 +18,8 @@ const (
 	_CLIENT_ORIGIN           = "CLIENT_ORIGIN"
 	_JWT_SECRET              = "JWT_SECRET"
 	_OAUTH_OTT_EXPIRE        = "OAUTH_OTT_EXPIRE"
+	_VAPID_PUBLIC_KEY        = "VAPID_PUBLIC_KEY"
+	_VAPID_PRIVATE_KEY       = "VAPID_PRIVATE_KEY"
 )
 
 var (
@@ -32,6 +34,8 @@ var (
 	CLIENT_ORIGIN           = os.Getenv(_CLIENT_ORIGIN)
 	JWT_SECRET              = os.Getenv(_JWT_SECRET)
 	OAUTH_OTT_EXPIRE        = os.Getenv(_OAUTH_OTT_EXPIRE)
+	VAPID_PUBLIC_KEY        = os.Getenv(_VAPID_PUBLIC_KEY)
+	VAPID_PRIVATE_KEY       = os.Getenv(_VAPID_PRIVATE_KEY)
 
 	IsDev = ENV == "development"
 
@@ -52,6 +56,8 @@ var (
 		_FRONT_OAUTH_SUCCESS_URL,
 		_JWT_SECRET,
 		_OAUTH_OTT_EXPIRE,
+		_VAPID_PUBLIC_KEY,
+		_VAPID_PRIVATE_KEY,
 	}
 )
 

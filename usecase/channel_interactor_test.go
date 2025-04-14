@@ -81,7 +81,7 @@ func TestChannelInteractor_Success_GetChannelByID(t *testing.T) {
 	interactor := usecase.NewChannelInteractor(hub, repo, repoUser, pre)
 
 	expectedChannel := &base.ChannelDetail{
-		Id:  "1",
+		Id:   "1",
 		Name: "test-channel",
 		Users: []*base.User{
 			{
@@ -395,9 +395,9 @@ func (m *mockChannelPresenter) GenerateGetChannelByIdResponse(channel *entity.Ch
 
 	return &response.GetChannelByIDResponse{
 		Channel: &base.ChannelDetail{
-			Id:       strconv.FormatUint(channel.ID, 10),
-			Name:     channel.Name,
-			Users:    users,
+			Id:    strconv.FormatUint(channel.ID, 10),
+			Name:  channel.Name,
+			Users: users,
 		},
 	}
 }
