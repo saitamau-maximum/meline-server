@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"context"
-	"sync"
 
 	"github.com/uptrace/bun"
 
@@ -12,7 +11,6 @@ import (
 
 type UserRepository struct {
 	db *bun.DB
-	mu sync.RWMutex
 }
 
 func NewUserRepository(db *bun.DB) repository.IUserRepository {
@@ -42,9 +40,6 @@ func (r *UserRepository) FindByProviderID(ctx context.Context, providerID string
 }
 
 func (r *UserRepository) Create(ctx context.Context, user *model.User) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	if _, err := r.db.NewInsert().Model(user).Exec(ctx); err != nil {
 		return err
 	}

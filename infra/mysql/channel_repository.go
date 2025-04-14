@@ -31,9 +31,6 @@ func (r *ChannelRepository) FindByID(ctx context.Context, id uint64) (*model.Cha
 }
 
 func (r *ChannelRepository) Create(ctx context.Context, channel *model.Channel, userId uint64) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	res, err := r.db.NewInsert().Model(channel).Exec(ctx)
 	if err != nil {
 		return err
@@ -57,9 +54,6 @@ func (r *ChannelRepository) Create(ctx context.Context, channel *model.Channel, 
 }
 
 func (r *ChannelRepository) CreateChildChannel(ctx context.Context, channel *model.Channel, parentChannelID uint64, userId uint64) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	res, err := r.db.NewInsert().Model(channel).Exec(ctx)
 	if err != nil {
 		return err
@@ -92,9 +86,6 @@ func (r *ChannelRepository) CreateChildChannel(ctx context.Context, channel *mod
 }
 
 func (r *ChannelRepository) Update(ctx context.Context, channel *model.Channel) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	if _, err := r.db.NewUpdate().Model(channel).Exec(ctx); err != nil {
 		return err
 	}
@@ -103,9 +94,6 @@ func (r *ChannelRepository) Update(ctx context.Context, channel *model.Channel) 
 }
 
 func (r *ChannelRepository) Delete(ctx context.Context, id uint64) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	if _, err := r.db.NewDelete().Model(&model.Channel{}).Where("id = ?", id).Exec(ctx); err != nil {
 		return err
 	}
@@ -122,9 +110,6 @@ func (r *ChannelRepository) Delete(ctx context.Context, id uint64) error {
 }
 
 func (r *ChannelRepository) JoinChannel(ctx context.Context, channelID uint64, userID uint64) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	channelToUsers := &model.ChannelUsers{
 		ChannelID: channelID,
 		UserID:    userID,
@@ -138,9 +123,6 @@ func (r *ChannelRepository) JoinChannel(ctx context.Context, channelID uint64, u
 }
 
 func (r *ChannelRepository) LeaveChannel(ctx context.Context, channelID uint64, userID uint64) error {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-
 	if _, err := r.db.NewDelete().Model(&model.ChannelUsers{}).Where("channel_id = ?", channelID).Where("user_id = ?", userID).Exec(ctx); err != nil {
 		return err
 	}
